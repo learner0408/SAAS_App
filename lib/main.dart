@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import './signIn.dart';
+//void main() => runApp(MyApp());
 
 void main() {
-  return runApp(SAAS());
+  return runApp(MaterialApp(
+    title: 'Navigation Basics',
+    home: SAAS(),
+  ));
 }
 
 class SAAS extends StatelessWidget {
