@@ -4,22 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:saas/location_service.dart';
 
-class MyApp extends StatelessWidget {
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Flutter Google Maps Demo',
+//       home: Home(),
+//     );
+//   }
+// }
+
+class Home extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Google Maps Demo',
-      home: MapSample(),
-    );
-  }
+  State<Home> createState() => HomeState();
 }
 
-class MapSample extends StatefulWidget {
-  @override
-  State<MapSample> createState() => MapSampleState();
-}
-
-class MapSampleState extends State<MapSample> {
+class HomeState extends State<Home> {
   Completer<GoogleMapController> _controller = Completer();
 
   TextEditingController _searchController = TextEditingController();
@@ -61,9 +61,9 @@ class MapSampleState extends State<MapSample> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
           title: Text("Google Maps"),
         ),
         body: Column(
@@ -94,6 +94,8 @@ class MapSampleState extends State<MapSample> {
                 markers: {_kGooglePlexMarker},
                 // polygons: {_kPolygon},
                 initialCameraPosition: _kGooglePlex,
+                zoomControlsEnabled: false,
+                zoomGesturesEnabled: true,
                 onMapCreated: (GoogleMapController controller) {
                   _controller.complete(controller);
                 },
@@ -106,8 +108,28 @@ class MapSampleState extends State<MapSample> {
         //   label: Text('To the lake!'),
         //   icon: Icon(Icons.directions_boat),
         // ),
-      ),
-    );
+        resizeToAvoidBottomInset: false,
+        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+        floatingActionButton: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              backgroundColor: Colors.white70,
+              onPressed: () {},
+              child: Icon(Icons.my_location),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            FloatingActionButton(
+                backgroundColor: Colors.white70,
+                onPressed: () {},
+                child: Icon(Icons.assistant_direction)),
+            SizedBox(
+              height: 15,
+            )
+          ],
+        ));
   }
 
   Future<void> _goToTheLake() async {

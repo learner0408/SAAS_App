@@ -5,6 +5,10 @@ import './signIn.dart';
 void main() {
   return runApp(MaterialApp(
     title: 'Navigation Basics',
+    theme: ThemeData(
+        primarySwatch: Colors.orange,
+        textTheme: TextTheme(
+            headline6: TextStyle(fontSize: 13, fontWeight: FontWeight.bold))),
     home: SAAS(),
   ));
 }
