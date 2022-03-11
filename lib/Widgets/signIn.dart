@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './home.dart';
+import 'home.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);
@@ -47,7 +47,7 @@ class _SignInState extends State<SignIn> {
                     style: TextStyle(
                       fontSize: 40.0,
                       fontWeight: FontWeight.bold,
-                      color: Colors.blue,
+                      color: Theme.of(context).primaryColor,
                     ),
                   ),
                 ),

@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:saas/location_service.dart';
+import 'package:geolocator/geolocator.dart';
+
+import 'direction_input.dart';
 
 // class MyApp extends StatelessWidget {
 //   @override
@@ -20,32 +22,20 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
-  Completer<GoogleMapController> _controller = Completer();
+  final Completer<GoogleMapController> _controller = Completer();
 
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
   );
 
-  static final CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
-
   static final Marker _kGooglePlexMarker = Marker(
       markerId: MarkerId('_kGooglePlex'),
       infoWindow: InfoWindow(title: 'Marker'),
       icon: BitmapDescriptor.defaultMarker,
       position: LatLng(37.42796133580664, -122.085749655962));
-
-  static final Marker _kLakeMarker = Marker(
-      markerId: MarkerId('_kLake'),
-      infoWindow: InfoWindow(title: 'Lake'),
-      icon: BitmapDescriptor.defaultMarker,
-      position: LatLng(37.43296265331129, -122.08832357078792));
 
   static final Polygon _kPolygon = Polygon(
     polygonId: PolygonId('kPolygon'),
@@ -58,6 +48,74 @@ class HomeState extends State<Home> {
     fillColor: Colors.transparent,
     strokeWidth: 5,
   );
+
+  final _startAddressController = TextEditingController();
+  final _destinationAddressController = TextEditingController();
+
+  void _DirectionInputs(BuildContext ctx) {
+    showModalBottomSheet(
+        context: ctx,
+        builder: (bctx) {
+          return GestureDetector(
+              onTap: () {},
+              child: Column(
+                children: [
+                  SizedBox(height: 8),
+                  Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: DirectionInput(_startAddressController, "Start",
+                        "From", Icon(Icons.radio_button_checked), () {}),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10.0, right: 10),
+                    child: DirectionInput(_destinationAddressController,
+                        "Destination", "To", Icon(Icons.place), () {}),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child:
+                        ElevatedButton(onPressed: () {}, child: Text("Search")),
+                  )
+                ],
+              ),
+              behavior: HitTestBehavior.opaque);
+        });
+  }
+
+  late GoogleMapController mapController;
+  late Position _currentPosition;
+
+  // Function for retreiving current location
+  _getCurrentLocation() async {
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) async {
+      setState(() {
+        // Store the position in the variable
+        _currentPosition = position;
+
+        print('CURRENT POS: $_currentPosition');
+
+        // For moving the camera to current location
+        mapController.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+              target: LatLng(position.latitude, position.longitude),
+              zoom: 18.0,
+            ),
+          ),
+        );
+      });
+      //await _getAddress();
+    }).catchError((e) {
+      print(e);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getCurrentLocation();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +140,7 @@ class HomeState extends State<Home> {
                 )),
                 IconButton(
                   onPressed: () {
-                    LocationService().getPlaceId(_searchController.text);
+                    //SearchService().getPlaceId(_searchController.text);
                   },
                   icon: Icon(Icons.search),
                 )
@@ -93,21 +151,18 @@ class HomeState extends State<Home> {
                 mapType: MapType.hybrid,
                 markers: {_kGooglePlexMarker},
                 // polygons: {_kPolygon},
+                myLocationEnabled: true,
+                myLocationButtonEnabled: false,
                 initialCameraPosition: _kGooglePlex,
                 zoomControlsEnabled: false,
                 zoomGesturesEnabled: true,
                 onMapCreated: (GoogleMapController controller) {
-                  _controller.complete(controller);
+                  mapController = controller;
                 },
               ),
             ),
           ],
         ),
-        // floatingActionButton: FloatingActionButton.extended(
-        //   onPressed: _goToTheLake,
-        //   label: Text('To the lake!'),
-        //   icon: Icon(Icons.directions_boat),
-        // ),
         resizeToAvoidBottomInset: false,
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         floatingActionButton: Column(
@@ -115,7 +170,20 @@ class HomeState extends State<Home> {
           children: [
             FloatingActionButton(
               backgroundColor: Colors.white70,
-              onPressed: () {},
+              onPressed: () {
+                mapController.animateCamera(
+                  CameraUpdate.newCameraPosition(
+                    CameraPosition(
+                      target: LatLng(
+                        // Will be fetching in the next step
+                        _currentPosition.latitude,
+                        _currentPosition.longitude,
+                      ),
+                      zoom: 18.0,
+                    ),
+                  ),
+                );
+              },
               child: Icon(Icons.my_location),
             ),
             SizedBox(
@@ -123,17 +191,12 @@ class HomeState extends State<Home> {
             ),
             FloatingActionButton(
                 backgroundColor: Colors.white70,
-                onPressed: () {},
+                onPressed: () => _DirectionInputs(context),
                 child: Icon(Icons.assistant_direction)),
             SizedBox(
               height: 15,
             )
           ],
         ));
-  }
-
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
   }
 }

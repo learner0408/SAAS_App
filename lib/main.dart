@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './signIn.dart';
+import 'Widgets/signIn.dart';
 //void main() => runApp(MyApp());
 
 void main() {
@@ -8,7 +8,9 @@ void main() {
     theme: ThemeData(
         primarySwatch: Colors.orange,
         textTheme: TextTheme(
-            headline6: TextStyle(fontSize: 13, fontWeight: FontWeight.bold))),
+            headline6: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(primary: Colors.orange))),
     home: SAAS(),
   ));
 }
@@ -21,3 +23,6 @@ class SAAS extends StatelessWidget {
     return SignIn();
   }
 }
+// StreamProvider<UserLocation>(
+//       builder: (context) => LocationService().locationstream,
+//       child: SignIn()
