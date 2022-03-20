@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 
-import 'direction_input.dart';
+import 'modified_textfield.dart';
+import '../Services/search_service.dart';
 
 // class MyApp extends StatelessWidget {
 //   @override
@@ -22,11 +23,11 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
-  final Completer<GoogleMapController> _controller = Completer();
+  //final Completer<GoogleMapController> _controller = Completer();
 
   final TextEditingController _searchController = TextEditingController();
 
-  static final CameraPosition _kGooglePlex = CameraPosition(
+  static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
   );
@@ -37,20 +38,11 @@ class HomeState extends State<Home> {
       icon: BitmapDescriptor.defaultMarker,
       position: LatLng(37.42796133580664, -122.085749655962));
 
-  static final Polygon _kPolygon = Polygon(
-    polygonId: PolygonId('kPolygon'),
-    points: [
-      LatLng(37.42796133580664, -122.085749655962),
-      LatLng(37.43296265331129, -122.08832357078792),
-      LatLng(37.258, -122.087),
-      LatLng(37.675, -122.234)
-    ],
-    fillColor: Colors.transparent,
-    strokeWidth: 5,
-  );
-
   final _startAddressController = TextEditingController();
   final _destinationAddressController = TextEditingController();
+  String _searchAddress = '';
+
+  Set<Marker> markers = {};
 
   void _DirectionInputs(BuildContext ctx) {
     showModalBottomSheet(
@@ -60,21 +52,21 @@ class HomeState extends State<Home> {
               onTap: () {},
               child: Column(
                 children: [
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: DirectionInput(_startAddressController, "Start",
-                        "From", Icon(Icons.radio_button_checked), () {}),
+                    padding: const EdgeInsets.all(10.0),
+                    child: ModifiedTxtField(_startAddressController, "Start",
+                        "From", const Icon(Icons.radio_button_checked), () {}),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 10.0, right: 10),
-                    child: DirectionInput(_destinationAddressController,
-                        "Destination", "To", Icon(Icons.place), () {}),
+                    padding: const EdgeInsets.only(left: 10.0, right: 10),
+                    child: ModifiedTxtField(_destinationAddressController,
+                        "Destination", "To", const Icon(Icons.place), () {}),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child:
-                        ElevatedButton(onPressed: () {}, child: Text("Search")),
+                    child: ElevatedButton(
+                        onPressed: () {}, child: const Text("Search")),
                   )
                 ],
               ),
@@ -119,10 +111,11 @@ class HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    markers.add(_kGooglePlexMarker);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
-          title: Text("Google Maps"),
+          title: const Text("Google Maps"),
         ),
         body: Column(
           children: [
@@ -131,25 +124,24 @@ class HomeState extends State<Home> {
                 Expanded(
                     child: Padding(
                   padding: const EdgeInsets.all(8),
-                  child: TextFormField(
-                    controller: _searchController,
-                    decoration: InputDecoration(hintText: 'Search By City'),
-                    textCapitalization: TextCapitalization.words,
-                    // onChanged: (value) => print(value),
-                  ),
+                  child: ModifiedTxtField(_searchController, "Search by city",
+                      "Search", Icon(Icons.search), (String value) {
+                    setState(() {
+                      _searchAddress = value;
+                    });
+                  }),
                 )),
                 IconButton(
-                  onPressed: () {
-                    //SearchService().getPlaceId(_searchController.text);
-                  },
-                  icon: Icon(Icons.search),
+                  onPressed: () =>
+                      searchFunc(_searchAddress, markers, mapController),
+                  icon: const Icon(Icons.search),
                 )
               ],
             ),
             Expanded(
               child: GoogleMap(
                 mapType: MapType.hybrid,
-                markers: {_kGooglePlexMarker},
+                markers: Set<Marker>.from(markers),
                 // polygons: {_kPolygon},
                 myLocationEnabled: true,
                 myLocationButtonEnabled: false,

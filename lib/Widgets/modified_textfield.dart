@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class DirectionInput extends StatelessWidget {
+class ModifiedTxtField extends StatelessWidget {
   //const DestinationInput({Key? key}) : super(key: key);
   TextEditingController controller;
   String label;
   String hint;
   Icon prefixIcon;
   Function locationCallback;
-  DirectionInput(this.controller, this.label, this.hint, this.prefixIcon,
+  ModifiedTxtField(this.controller, this.label, this.hint, this.prefixIcon,
       this.locationCallback);
   @override
   Widget build(BuildContext context) {

@@ -1,19 +1,37 @@
-import 'package:http/http.dart' as http;
-import 'dart:convert' as convert;
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geocoding/geocoding.dart';
 
-class SearchService {
-  final String key = 'AIzaSyDmBDd9JpfU8i4AvMSUcJaPZNiQStw5yLI';
+void searchFunc(_searchAddress, markers, mapController) async {
+  //SearchService().getPlaceId(_searchController.text);
+  List<Location> _searchPlacemark = await locationFromAddress(_searchAddress);
 
-  Future<String> getPlaceId(String input) async {
-    final String url =
-        "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=$input&inputtype=textquery&key=$key";
+  double searchLatitude = _searchPlacemark[0].latitude;
+  double searchLongitude = _searchPlacemark[0].longitude;
+  String searchCoordinatesString = '($searchLatitude, $searchLongitude)';
 
-    var response = await http.get(Uri.parse(url));
-    var json = convert.jsonDecode(response.body);
-    var placeId = json['candidates'][0]['place_id'] as String;
+  print(searchCoordinatesString);
 
-    print(placeId);
-    return placeId;
-  }
-  // Future<Map<String,dynamic>> getPlace(String input) async{}
+  Marker searchMarker = Marker(
+    markerId: MarkerId(searchCoordinatesString),
+    position: LatLng(searchLatitude, searchLongitude),
+    infoWindow: InfoWindow(
+      title: 'Search $searchCoordinatesString',
+      snippet: _searchAddress,
+    ),
+    icon: BitmapDescriptor.defaultMarker,
+  );
+  markers.add(searchMarker);
+
+  mapController.animateCamera(
+    CameraUpdate.newCameraPosition(
+      CameraPosition(
+        target: LatLng(
+          // Will be fetching in the next step
+          searchLatitude,
+          searchLongitude,
+        ),
+        zoom: 50.0,
+      ),
+    ),
+  );
 }

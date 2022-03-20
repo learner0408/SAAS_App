@@ -7,7 +7,7 @@ void main() {
     title: 'Navigation Basics',
     theme: ThemeData(
         primarySwatch: Colors.orange,
-        textTheme: TextTheme(
+        textTheme: const TextTheme(
             headline6: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
         elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(primary: Colors.orange))),
