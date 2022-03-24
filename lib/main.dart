@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'Widgets/signIn.dart';
+
+import './screens/signIn.dart';
+import './screens/home.dart';
 //void main() => runApp(MyApp());
 
 void main() {
@@ -11,6 +13,7 @@ void main() {
             headline6: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
         elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(primary: Colors.orange))),
+    routes: {Home.routeName: (ctx) => Home()},
     home: SAAS(),
   ));
 }

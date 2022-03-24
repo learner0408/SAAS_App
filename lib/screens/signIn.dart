@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'home.dart';
 
 class SignIn extends StatefulWidget {
@@ -27,7 +28,7 @@ class _SignInState extends State<SignIn> {
         titleTextStyle: Theme.of(context).textTheme.headline6,
         title: Container(
           width: double.infinity,
-          child: Text(
+          child: const Text(
             "SAAS App",
             textAlign: TextAlign.center,
           ),
@@ -41,7 +42,7 @@ class _SignInState extends State<SignIn> {
                 width: double.infinity,
                 alignment: Alignment.center,
                 child: Padding(
-                  padding: EdgeInsets.only(top: 15),
+                  padding: const EdgeInsets.only(top: 15),
                   child: Text(
                     "SAAS",
                     style: TextStyle(
@@ -53,7 +54,8 @@ class _SignInState extends State<SignIn> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(left: 8, right: 8, top: 15, bottom: 5),
+                padding: const EdgeInsets.only(
+                    left: 8, right: 8, top: 15, bottom: 5),
                 child: TextFormField(
                   controller: _emailInput,
                   decoration: InputDecoration(
@@ -63,7 +65,7 @@ class _SignInState extends State<SignIn> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(left: 8, right: 8, bottom: 5),
+                padding: const EdgeInsets.only(left: 8, right: 8, bottom: 5),
                 child: TextFormField(
                   controller: _passwordInput,
                   decoration: InputDecoration(
@@ -83,7 +85,7 @@ class _SignInState extends State<SignIn> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 80.0),
+                    padding: const EdgeInsets.only(left: 80.0),
                     child: ElevatedButton(
                       onPressed: () {
                         setState(() {
@@ -96,10 +98,7 @@ class _SignInState extends State<SignIn> {
                         });
                         if (_emailValidate == true &&
                             _passwordValidate == true) {
-                          Navigator.push(
-                              context,
-                              new MaterialPageRoute(
-                                  builder: (context) => new Home()));
+                          Navigator.of(context).pushNamed(Home.routeName);
                         }
                       },
                       child: Text(

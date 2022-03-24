@@ -3,8 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:saas/services/create_polylines.dart';
 
-import 'modified_textfield.dart';
+import '../widgets/modified_textfield.dart';
 import '../Services/search_service.dart';
 
 // class MyApp extends StatelessWidget {
@@ -18,6 +19,7 @@ import '../Services/search_service.dart';
 // }
 
 class Home extends StatefulWidget {
+  static const routeName = '/home-page';
   @override
   State<Home> createState() => HomeState();
 }
@@ -25,6 +27,7 @@ class Home extends StatefulWidget {
 class HomeState extends State<Home> {
   //final Completer<GoogleMapController> _controller = Completer();
 
+  Map<PolylineId, Polyline> polylines = {};
   final TextEditingController _searchController = TextEditingController();
 
   static const CameraPosition _kGooglePlex = CameraPosition(
@@ -32,7 +35,7 @@ class HomeState extends State<Home> {
     zoom: 14.4746,
   );
 
-  static final Marker _kGooglePlexMarker = Marker(
+  static const Marker _kGooglePlexMarker = Marker(
       markerId: MarkerId('_kGooglePlex'),
       infoWindow: InfoWindow(title: 'Marker'),
       icon: BitmapDescriptor.defaultMarker,
@@ -41,6 +44,8 @@ class HomeState extends State<Home> {
   final _startAddressController = TextEditingController();
   final _destinationAddressController = TextEditingController();
   String _searchAddress = '';
+  String _startAddress = '';
+  String _destinationAddress = '';
 
   Set<Marker> markers = {};
 
@@ -55,18 +60,50 @@ class HomeState extends State<Home> {
                   const SizedBox(height: 8),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: ModifiedTxtField(_startAddressController, "Start",
-                        "From", const Icon(Icons.radio_button_checked), () {}),
+                    child: ModifiedTxtField(
+                        _startAddressController,
+                        "Start",
+                        "From",
+                        const Icon(Icons.radio_button_checked), (String val1) {
+                      setState(() {
+                        _startAddress = val1;
+                      });
+                    }),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 10.0, right: 10),
-                    child: ModifiedTxtField(_destinationAddressController,
-                        "Destination", "To", const Icon(Icons.place), () {}),
+                    child: ModifiedTxtField(
+                        _destinationAddressController,
+                        "Destination",
+                        "To",
+                        const Icon(Icons.place), (String val2) {
+                      setState(() {
+                        _destinationAddress = val2;
+                      });
+                    }),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: ElevatedButton(
-                        onPressed: () {}, child: const Text("Search")),
+                        onPressed: () {
+                          final result = createPolylines(
+                              _startAddress,
+                              _destinationAddress,
+                              markers,
+                              mapController,
+                              polylines);
+                          final id = result.then((e) {
+                            e['id'];
+                          });
+                          final route = result.then((e) {
+                            e['route'];
+                          });
+
+                          setState(() {
+                            polylines[id as PolylineId] = route as Polyline;
+                          });
+                        },
+                        child: const Text("Search")),
                   )
                 ],
               ),
@@ -148,6 +185,7 @@ class HomeState extends State<Home> {
                 initialCameraPosition: _kGooglePlex,
                 zoomControlsEnabled: false,
                 zoomGesturesEnabled: true,
+                polylines: Set<Polyline>.of(polylines.values),
                 onMapCreated: (GoogleMapController controller) {
                   mapController = controller;
                 },

@@ -30,7 +30,7 @@ void searchFunc(_searchAddress, markers, mapController) async {
           searchLatitude,
           searchLongitude,
         ),
-        zoom: 50.0,
+        zoom: 100.0,
       ),
     ),
   );
