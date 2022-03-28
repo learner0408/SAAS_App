@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -86,22 +84,19 @@ class HomeState extends State<Home> {
                     padding: const EdgeInsets.all(10.0),
                     child: ElevatedButton(
                         onPressed: () {
-                          final result = createPolylines(
-                              _startAddress,
-                              _destinationAddress,
-                              markers,
-                              mapController,
-                              polylines);
-                          final id = result.then((e) {
-                            e['id'];
-                          });
-                          final route = result.then((e) {
-                            e['route'];
-                          });
+                          createPolylines(_startAddress, _destinationAddress,
+                              markers, mapController, polylines);
+                          // final id = result.then((e) {
+                          //   e['id'];
+                          // });
+                          // final route = result.then((e) {
+                          //   e['route'];
+                          // });
 
-                          setState(() {
-                            polylines[id as PolylineId] = route as Polyline;
-                          });
+                          // setState(() {
+                          //   polylines[id as PolylineId] = route as Polyline;
+                          // });
+                          Navigator.of(context).pop();
                         },
                         child: const Text("Search")),
                   )
@@ -162,7 +157,7 @@ class HomeState extends State<Home> {
                     child: Padding(
                   padding: const EdgeInsets.all(8),
                   child: ModifiedTxtField(_searchController, "Search by city",
-                      "Search", Icon(Icons.search), (String value) {
+                      "Search", const Icon(Icons.search), (String value) {
                     setState(() {
                       _searchAddress = value;
                     });
@@ -214,16 +209,16 @@ class HomeState extends State<Home> {
                   ),
                 );
               },
-              child: Icon(Icons.my_location),
+              child: const Icon(Icons.my_location),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             FloatingActionButton(
                 backgroundColor: Colors.white70,
                 onPressed: () => _DirectionInputs(context),
-                child: Icon(Icons.assistant_direction)),
-            SizedBox(
+                child: const Icon(Icons.assistant_direction)),
+            const SizedBox(
               height: 15,
             )
           ],

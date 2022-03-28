@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './create_account.dart';
 
 import 'home.dart';
 
@@ -20,12 +21,18 @@ class _SignInState extends State<SignIn> {
     "2019eeb1197@iitrpr.ac.in",
     "sam@iitrpr.ac.in"
   ];
+  final Map<String, String> _possiblePasswords = {
+    "2019eeb1144@iitrpr.ac.in": "12345",
+    "2019eeb1148@iitrpr.ac.in": "12345",
+    "2019eeb1197@iitrpr.ac.in": "12345",
+    "sam@iitrpr.ac.in": "12345",
+  };
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
-        titleTextStyle: Theme.of(context).textTheme.headline6,
+        titleTextStyle: Theme.of(context).appBarTheme.titleTextStyle,
         title: Container(
           width: double.infinity,
           child: const Text(
@@ -92,9 +99,12 @@ class _SignInState extends State<SignIn> {
                           _possibleEmails.contains(_emailInput.text)
                               ? _emailValidate = true
                               : _emailValidate = false;
-                          _passwordInput.text == "12345"
-                              ? _passwordValidate = true
-                              : _passwordValidate = false;
+                          if (_emailValidate) {
+                            _passwordInput.text ==
+                                    _possiblePasswords[_emailInput.text]
+                                ? _passwordValidate = true
+                                : _passwordValidate = false;
+                          }
                         });
                         if (_emailValidate == true &&
                             _passwordValidate == true) {
@@ -113,7 +123,11 @@ class _SignInState extends State<SignIn> {
                 ],
               ),
               TextButton(
-                onPressed: null,
+                onPressed: () => Navigator.of(context)
+                    .pushNamed(CreateAccount.routeName, arguments: {
+                  "emails": _possibleEmails,
+                  "passwords": _possiblePasswords
+                }),
                 child: Text(
                   "Create an account",
                   style: TextStyle(color: Theme.of(context).primaryColor),

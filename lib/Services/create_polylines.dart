@@ -2,8 +2,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
-Future<Map<String, Object>> createPolylines(_startAddress, _destinationAddress,
-    markers, mapController, polylines) async {
+void createPolylines(_startAddress, _destinationAddress, markers, mapController,
+    polylines) async {
   List<LatLng> polylineCoordinates = [];
   List<Location> _startPlacemark = await locationFromAddress(_startAddress);
   List<Location> _destinationPlacemark =
@@ -90,5 +90,4 @@ Future<Map<String, Object>> createPolylines(_startAddress, _destinationAddress,
       100.0,
     ),
   );
-  return {'id': id, 'route': route};
 }

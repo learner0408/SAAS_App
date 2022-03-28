@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './screens/create_account.dart';
 
 import './screens/signIn.dart';
 import './screens/home.dart';
@@ -10,10 +11,16 @@ void main() {
     theme: ThemeData(
         primarySwatch: Colors.orange,
         textTheme: const TextTheme(
-            headline6: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+            headline6: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
         elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ElevatedButton.styleFrom(primary: Colors.orange))),
-    routes: {Home.routeName: (ctx) => Home()},
+            style: ElevatedButton.styleFrom(primary: Colors.orange)),
+        appBarTheme: const AppBarTheme(
+            titleTextStyle:
+                TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
+    routes: {
+      Home.routeName: (ctx) => Home(),
+      CreateAccount.routeName: (ctx) => CreateAccount()
+    },
     home: SAAS(),
   ));
 }
@@ -26,6 +33,3 @@ class SAAS extends StatelessWidget {
     return SignIn();
   }
 }
-// StreamProvider<UserLocation>(
-//       builder: (context) => LocationService().locationstream,
-//       child: SignIn()
