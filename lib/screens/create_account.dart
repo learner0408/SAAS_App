@@ -16,7 +16,7 @@ bool _emailValidate = true;
 bool _passswordValidate = true;
 
 Widget AccountTextField(String title, TextEditingController controller,
-    String errormsg, bool validate) {
+    String errormsg, bool validate, TextInputType inputType) {
   return Container(
     padding: const EdgeInsets.symmetric(
       horizontal: 15,
@@ -29,6 +29,7 @@ Widget AccountTextField(String title, TextEditingController controller,
           border: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(7))),
           errorText: validate ? null : errormsg),
+      keyboardType: inputType,
     ),
   );
 }
@@ -60,18 +61,26 @@ class _CreateAccountState extends State<CreateAccount> {
           const SizedBox(
             height: 20,
           ),
-          AccountTextField("E-mail id", email,
-              "Email is either empty or already exists", _emailValidate),
+          AccountTextField(
+              "E-mail id",
+              email,
+              "Email is either empty or already exists",
+              _emailValidate,
+              TextInputType.emailAddress),
           const SizedBox(
             height: 15,
           ),
           AccountTextField("Password", password, "Password is not valid",
-              _passswordValidate),
+              _passswordValidate, TextInputType.number),
           const SizedBox(
             height: 15,
           ),
-          AccountTextField("Confirm Password", confirmPassword,
-              "Password is not valid", _passswordValidate),
+          AccountTextField(
+              "Confirm Password",
+              confirmPassword,
+              "Password is not valid",
+              _passswordValidate,
+              TextInputType.number),
           const SizedBox(
             height: 10,
           ),
@@ -81,6 +90,8 @@ class _CreateAccountState extends State<CreateAccount> {
                     password.text != '' &&
                     confirmPassword.text != '') {
                   if (emails.contains(email.text) == false &&
+                      (email.text.endsWith('@gmail.com') ||
+                          email.text.endsWith('@iitrpr.ac.in')) &&
                       password.text == confirmPassword.text) {
                     _emailValidate = true;
                     _passswordValidate = true;
