@@ -64,7 +64,7 @@ class _CreateAccountState extends State<CreateAccount> {
           AccountTextField(
               "E-mail id",
               email,
-              "Email is either empty or already exists",
+              "Email is invalid",
               _emailValidate,
               TextInputType.emailAddress),
           const SizedBox(
