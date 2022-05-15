@@ -44,6 +44,7 @@ class HomeState extends State<Home> {
   String _searchAddress = '';
   String _startAddress = '';
   String _destinationAddress = '';
+  MapType _currentMapView = MapType.normal;
 
   Set<Marker> markers = {};
 
@@ -135,6 +136,17 @@ class HomeState extends State<Home> {
     });
   }
 
+  // Changing Map View
+  void _MapViewButton() {
+    setState(() {
+      if (_currentMapView == MapType.normal) {
+        _currentMapView = MapType.hybrid;
+      } else {
+        _currentMapView = MapType.normal;
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -171,20 +183,33 @@ class HomeState extends State<Home> {
               ],
             ),
             Expanded(
-              child: GoogleMap(
-                mapType: MapType.hybrid,
-                markers: Set<Marker>.from(markers),
-                // polygons: {_kPolygon},
-                myLocationEnabled: true,
-                myLocationButtonEnabled: false,
-                initialCameraPosition: _kGooglePlex,
-                zoomControlsEnabled: false,
-                zoomGesturesEnabled: true,
-                polylines: Set<Polyline>.of(polylines.values),
-                onMapCreated: (GoogleMapController controller) {
-                  mapController = controller;
-                },
-              ),
+              child: Stack(children: [
+                GoogleMap(
+                  mapType: _currentMapView,
+                  markers: Set<Marker>.from(markers),
+                  // polygons: {_kPolygon},
+                  myLocationEnabled: true,
+                  myLocationButtonEnabled: false,
+                  initialCameraPosition: _kGooglePlex,
+                  zoomControlsEnabled: false,
+                  zoomGesturesEnabled: true,
+                  polylines: Set<Polyline>.of(polylines.values),
+                  onMapCreated: (GoogleMapController controller) {
+                    mapController = controller;
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Align(
+                    alignment: Alignment.bottomLeft,
+                    child: FloatingActionButton(
+                      backgroundColor: Colors.white70,
+                      onPressed: _MapViewButton,
+                      child: const Icon(Icons.layers_rounded),
+                    ),
+                  ),
+                )
+              ]),
             ),
           ],
         ),

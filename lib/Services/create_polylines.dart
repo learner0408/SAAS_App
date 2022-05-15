@@ -41,10 +41,12 @@ void createPolylines(_startAddress, _destinationAddress, markers, mapController,
 
   PolylinePoints polylinePoints = PolylinePoints();
   PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      "AIzaSyB11VtiLu7hyW6RbOn8DW2zhSbE6H0TT34",
-      PointLatLng(startLatitude, startLongitude),
-      PointLatLng(destinationLatitude, destinationLongitude),
-      travelMode: TravelMode.driving);
+    "AIzaSyC5izqxi8B4g-UFfwXszolte4ktE41g2ow",
+    PointLatLng(startLatitude, startLongitude),
+    PointLatLng(destinationLatitude, destinationLongitude),
+    travelMode: TravelMode.driving,
+    optimizeWaypoints: true,
+  );
   if (result.points.isNotEmpty) {
     result.points.forEach((PointLatLng point) {
       polylineCoordinates.add(LatLng(point.latitude, point.longitude));

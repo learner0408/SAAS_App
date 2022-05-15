@@ -36,7 +36,7 @@ class _SignInState extends State<SignIn> {
         title: Container(
           width: double.infinity,
           child: const Text(
-            "SAAS App",
+            "Network Assisted Navigation System",
             textAlign: TextAlign.center,
           ),
         ),
@@ -51,7 +51,7 @@ class _SignInState extends State<SignIn> {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 15),
                   child: Text(
-                    "SAAS",
+                    "NANS",
                     style: TextStyle(
                       fontSize: 40.0,
                       fontWeight: FontWeight.bold,
