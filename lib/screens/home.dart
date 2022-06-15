@@ -5,6 +5,7 @@ import 'package:saas/services/create_polylines.dart';
 
 import '../widgets/modified_textfield.dart';
 import '../Services/search_service.dart';
+import '../services/get_directions.dart';
 
 // class MyApp extends StatelessWidget {
 //   @override
@@ -85,8 +86,11 @@ class HomeState extends State<Home> {
                     padding: const EdgeInsets.all(10.0),
                     child: ElevatedButton(
                         onPressed: () {
-                          createPolylines(_startAddress, _destinationAddress,
-                              markers, mapController, polylines);
+                          setState(() {
+                            getDirections(_startAddress, _destinationAddress,
+                                markers, mapController, polylines, ctx);
+                          });
+
                           // final id = result.then((e) {
                           //   e['id'];
                           // });
