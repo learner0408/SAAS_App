@@ -29,7 +29,7 @@ void getDirections(_startAddress, _destinationAddress, markers, mapController,
       '($destinationLatitude, $destinationLongitude)';
 
   Uri directionURL = Uri.parse(
-      "https://maps.googleapis.com/maps/api/directions/json?destination=${destinationLatitude},${destinationLongitude}&origin=${startLatitude},${startLongitude}&alternatives=true&key=${"AIzaSyC5izqxi8B4g-UFfwXszolte4ktE41g2ow"}");
+      "https://maps.googleapis.com/maps/api/directions/json?destination=${destinationLatitude},${destinationLongitude}&origin=${startLatitude},${startLongitude}&alternatives=true&key=${"API KEY"}");
 
   http.Response res = await http.get(directionURL);
 
