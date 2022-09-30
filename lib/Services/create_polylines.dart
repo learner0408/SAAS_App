@@ -41,7 +41,7 @@ void createPolylines(_startAddress, _destinationAddress, markers, mapController,
 
   PolylinePoints polylinePoints = PolylinePoints();
   PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-    "AIzaSyC5izqxi8B4g-UFfwXszolte4ktE41g2ow",
+    "API KEY",
     PointLatLng(startLatitude, startLongitude),
     PointLatLng(destinationLatitude, destinationLongitude),
     travelMode: TravelMode.driving,
